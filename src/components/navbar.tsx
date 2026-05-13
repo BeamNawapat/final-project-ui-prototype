@@ -19,7 +19,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
       <div className="container mx-auto flex h-16 items-center gap-6 px-4 max-w-7xl">
         {/* Logo + brand */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -30,7 +30,7 @@ export function Navbar() {
             height={28}
             priority
           />
-          <span className="text-base font-semibold tracking-tight bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+          <span className="text-base font-semibold tracking-tight text-gradient">
             AgriCast
           </span>
         </Link>

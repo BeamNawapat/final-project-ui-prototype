@@ -2,51 +2,37 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Sun, Moon, Monitor } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Sun, Moon } from "lucide-react";
 
 /**
- * 3-way theme toggle: system | light | dark.
- * Defaults to system on first load. Persisted by next-themes in localStorage.
+ * Single-button light/dark toggle.
+ * Defaults to light; persisted by next-themes in localStorage so the
+ * choice survives reloads. No "system" option — explicit user choice.
  */
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
   if (!mounted) {
-    // avoid hydration mismatch — render an invisible placeholder of the same size
-    return <div className="h-9 w-[108px]" aria-hidden />;
+    return <div className="h-9 w-9" aria-hidden />;
   }
 
-  const options: Array<{
-    value: "system" | "light" | "dark";
-    icon: React.ReactNode;
-    label: string;
-  }> = [
-    { value: "system", icon: <Monitor className="h-3.5 w-3.5" />, label: "System" },
-    { value: "light", icon: <Sun className="h-3.5 w-3.5" />, label: "Light" },
-    { value: "dark", icon: <Moon className="h-3.5 w-3.5" />, label: "Dark" },
-  ];
+  const isDark = resolvedTheme === "dark";
 
   return (
-    <div className="inline-flex items-center gap-0.5 rounded-full border bg-card p-0.5">
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          onClick={() => setTheme(opt.value)}
-          aria-label={opt.label}
-          title={opt.label}
-          className={cn(
-            "inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors",
-            theme === opt.value
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {opt.icon}
-        </button>
-      ))}
-    </div>
+    <button
+      type="button"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full border bg-card text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+    >
+      {isDark ? (
+        <Sun className="h-4 w-4" />
+      ) : (
+        <Moon className="h-4 w-4" />
+      )}
+    </button>
   );
 }
