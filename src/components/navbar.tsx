@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
+import { FakeConnectButton } from "@/components/wallet/fake-connect-button";
 
 const NAV_LINKS = [
   { href: "/markets", label: "Markets" },
@@ -62,9 +62,7 @@ export function Navbar() {
         {/* Right cluster: theme toggle + wallet */}
         <div className="ml-auto flex items-center gap-3">
           <ThemeToggle />
-          <Button size="sm" className="rounded-lg">
-            Connect Wallet
-          </Button>
+          <FakeConnectButton />
         </div>
       </div>
     </nav>

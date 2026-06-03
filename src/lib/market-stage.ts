@@ -37,6 +37,7 @@ interface MarketLike {
   status: string;
   tradingCutoffTime?: string | Date | null;
   resolutionTime?: string | Date | null;
+  expectedOpenTime?: string | Date | null;
 }
 
 export function deriveMarketStage(market: MarketLike, now: Date = new Date()): MarketStage {
@@ -44,7 +45,12 @@ export function deriveMarketStage(market: MarketLike, now: Date = new Date()): M
   if (market.status === "DISPUTED") return "DISPUTED";
   if (market.status === "CANCELLED") return "CANCELLED";
   if (market.status === "PAUSED") return "PAUSED";
-  if (market.status === "PENDING") return "PENDING";
+  if (market.status === "PENDING") {
+    const openAt = market.expectedOpenTime ? new Date(market.expectedOpenTime) : null;
+    if (!openAt || now < openAt) return "PENDING";
+    // Past expectedOpenTime → treat as if status flipped to ACTIVE. The
+    // time-derived flow below classifies ACTIVE/CLOSED/REPORTING/DISPUTE.
+  }
 
   const cutoff = market.tradingCutoffTime ? new Date(market.tradingCutoffTime) : null;
   const resolution = market.resolutionTime ? new Date(market.resolutionTime) : null;

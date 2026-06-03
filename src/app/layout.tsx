@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Agentation } from "agentation";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,6 +42,7 @@ export default function RootLayout({
         >
           <Navbar />
           <main className="flex-1">{children}</main>
+          <Toaster />
           {process.env.NODE_ENV === "development" && <Agentation />}
         </ThemeProvider>
       </body>

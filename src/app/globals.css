@@ -96,14 +96,14 @@
   /* User-chosen near-black with subtle cool tint */
   --background: #15191D;
   --foreground: oklch(0.95 0.01 270);
-  --card: oklch(0.18 0.02 270 / 80%);
+  --card: oklch(0.22 0.02 270 / 95%);
   --card-foreground: oklch(0.95 0.01 270);
   --popover: oklch(0.15 0.02 270 / 95%);
   --popover-foreground: oklch(0.95 0.01 270);
-  /* Same vibrant purple-blue primary in both modes so the brand button
-     reads identically across light/dark. White text in both for contrast. */
-  --primary: oklch(0.55 0.25 270);
-  --primary-foreground: oklch(0.98 0 0);
+  /* Brighter primary in dark mode so the button pops against near-black bg
+     and doesn't read as "deep navy" on hover. White text both modes. */
+  --primary: oklch(0.65 0.22 270);
+  --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.22 0.03 270);
   --secondary-foreground: oklch(0.9 0.01 270);
   --muted: oklch(0.22 0.02 270);
@@ -136,9 +136,9 @@
   --sidebar-border: oklch(1 0 0 / 12%);
   --sidebar-ring: oklch(0.7 0.2 270);
   /* Glassmorphism dark */
-  --glass-bg: oklch(0.2 0.02 270 / 50%);
-  --glass-border: oklch(1 0 0 / 15%);
-  --glass-shadow: oklch(0 0 0 / 30%);
+  --glass-bg: oklch(0.22 0.02 270 / 92%);
+  --glass-border: oklch(1 0 0 / 10%);
+  --glass-shadow: oklch(0 0 0 / 40%);
 }
 
 @layer base {
@@ -359,9 +359,15 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Text gradient */
+  /* Text gradient — purple-dominant so small (navbar) and large (page heading)
+     uses look visually identical instead of the bigger one drifting to cyan. */
   .text-gradient {
-    background: linear-gradient(135deg, oklch(0.55 0.25 270), oklch(0.7 0.18 200));
+    background: linear-gradient(
+      135deg,
+      oklch(0.55 0.25 270) 0%,
+      oklch(0.55 0.25 270) 60%,
+      oklch(0.7 0.18 200) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -395,4 +401,34 @@
   .dark ::-webkit-scrollbar-thumb:hover {
     background: oklch(0.6 0.02 270 / 60%);
   }
+}
+
+/* Suppress focus styles for mouse-click only. Keyboard tab navigation
+   still triggers :focus-visible and gets the Tailwind ring. */
+*:focus:not(:focus-visible) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Recharts wrapper / surface ships its own tabindex + native focus outline.
+   Kill it always so chart clicks don't show a blue rectangle. */
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+svg.recharts-surface {
+  outline: none !important;
+}
+
+/* Hide native number-input spinner buttons (Chrome, Safari, Firefox).
+   Kept outside @layer so cascade can't override. */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  margin: 0 !important;
+}
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
 }
